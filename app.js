@@ -4,7 +4,7 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import helmet from 'helmet';
 import compression from 'compression';
-import rateLimit from 'express-rate-limit';
+// import rateLimit from 'express-rate-limit';
 import cluster from 'cluster';
 import os from 'os';
 import connectDB from './utils/db.js';
@@ -45,11 +45,11 @@ if (cluster.isPrimary) {
   app.use(compression());
 
   // Rate limiting
-  const limiter = rateLimit({
-    windowMs: 1 * 60 * 1000,
-    max: 1000,
-  });
-  app.use(limiter);
+  // const limiter = rateLimit({
+  //   windowMs: 1 * 60 * 1000,
+  //   max: 1000,
+  // });
+  // app.use(limiter);
 
   // CORS
 const allowedOrigins = process.env.FRONTEND_URLS.split(','); // Array বানালো
