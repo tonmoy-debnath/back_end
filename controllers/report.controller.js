@@ -8,13 +8,13 @@ export const createReport = async (req, res) => {
     const userId = req.id;
 
     // ফাইল থেকে S3 URL নাও
-    const imageUrl = req.file ? req.file.location : null;
+    // const imageUrl = req.file ? req.file.location : null;
 
     const newReport = new Report({
       title,
       reason: description,
       author: userId,
-      image: imageUrl,
+      image: req.file ? req.file.key : null,
     });
 
     await newReport.save();

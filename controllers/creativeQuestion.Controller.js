@@ -2,6 +2,7 @@ import CreativeQuestion from "../model/CreativeQuestion.model.js";
 import SelectedQuestion from "../model/SelectedQuestion.model.js";
 
 // ➕ নতুন প্রশ্ন তৈরি
+
 export const createCreativeQuestion = async (req, res) => {
   try {
     const { class: cls, subject, chapter, stimulusText, questions, answers } = req.body;
@@ -11,17 +12,18 @@ export const createCreativeQuestion = async (req, res) => {
       subject,
       chapter,
       stimulusText,
-      stimulusImage: req.file ? req.file.location : null,
+      stimulusImage: req.file ? req.file.key : null,
       questions: typeof questions === "string" ? JSON.parse(questions) : questions,
       answers: answers ? (typeof answers === "string" ? JSON.parse(answers) : answers) : {},
     });
 
     await newQuestion.save();
     res.status(201).json({ success: true, question: newQuestion });
-  } catch {
+  } catch (err) {
     res.status(500).json({ success: false, message: "Server error" });
   }
 };
+
 
 // 📖 প্রশ্নগুলো পাওয়া
 export const getCreativeQuestions = async (req, res) => {
