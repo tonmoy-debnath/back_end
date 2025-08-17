@@ -10,6 +10,9 @@ import SelectedQuestion from "../model/SelectedQuestion.model.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+// ✅ S3 Base URL
+const S3_BASE_URL = "https://foxeka-stor.s3.ap-south-1.amazonaws.com/";
+
 export const generatePDF = async (req, res) => {
   try {
     const { school_name, exam_name, class_name, subject, duration, total_marks, special_note } = req.body;
@@ -68,7 +71,10 @@ export const generatePDF = async (req, res) => {
 
       if (q.stimulusImage) {
         try {
-          const response = await fetch(q.stimulusImage);
+          // ✅ Base URL + Key যুক্ত করা
+          const imageUrl = `${S3_BASE_URL}${q.stimulusImage}`;
+          const response = await fetch(imageUrl);
+
           if (response.ok) {
             const imageBuffer = Buffer.from(await response.arrayBuffer());
             const availableWidth = doc.page.width - doc.page.margins.left - doc.page.margins.right;
