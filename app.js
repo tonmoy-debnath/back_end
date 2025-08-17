@@ -4,7 +4,7 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import helmet from 'helmet';
 import compression from 'compression';
-import rateLimit from 'express-rate-limit';
+// import rateLimit from 'express-rate-limit';
 import cluster from 'cluster';
 import os from 'os';
 import connectDB from './utils/db.js';
@@ -43,33 +43,27 @@ if (cluster.isPrimary) {
   app.use(cookieParser());
   app.use(helmet());
   app.use(compression());
-
+  app.set('trust proxy', 1); // Trust first proxy for secure cookies
   // Rate limiting
-app.set('trust proxy', 1); // NGINX বা অন্য reverse proxy থেকে আসা X-Forwarded-For ঠিকভাবে ধরবে
-
-// Rate-limit (যদি ব্যবহার করো)
-const limiter = rateLimit({
-  windowMs: 5 * 60 * 1000, // 5 মিনিট
-  max: 100,                  // এক IP থেকে max 100 request
-  standardHeaders: true,
-  legacyHeaders: false,
-});
-
-app.use(limiter);
+  const limiter = rateLimit({
+    windowMs: 1 * 60 * 1000,
+    max: 1000,
+  });
+  app.use(limiter);
 
   // CORS
-const allowedOrigins = process.env.FRONTEND_URLS.split(','); // Array বানালো
+  const allowedOrigins = process.env.FRONTEND_URLS.split(','); // Array বানালো
 
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      if (!origin) return callback(null, true); // Postman বা curl
-      if (allowedOrigins.includes(origin)) callback(null, true);
-      else callback(new Error("Not allowed by CORS"));
-    },
-    credentials: true,
-  })
-);
+  app.use(
+    cors({
+      origin: (origin, callback) => {
+        if (!origin) return callback(null, true); // Postman বা curl
+        if (allowedOrigins.includes(origin)) callback(null, true);
+        else callback(new Error("Not allowed by CORS"));
+      },
+      credentials: true,
+    })
+  );
 
   // Static folder
   app.use("/upload", express.static("upload", { maxAge: '1d' }));
