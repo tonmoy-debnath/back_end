@@ -45,11 +45,17 @@ if (cluster.isPrimary) {
   app.use(compression());
 
   // Rate limiting
-  const limiter = rateLimit({
-    windowMs: 1 * 60 * 1000,
-    max: 1000,
-  });
-  app.use(limiter);
+app.set('trust proxy', 1); // NGINX বা অন্য reverse proxy থেকে আসা X-Forwarded-For ঠিকভাবে ধরবে
+
+// Rate-limit (যদি ব্যবহার করো)
+const limiter = rateLimit({
+  windowMs: 5 * 60 * 1000, // 5 মিনিট
+  max: 100,                  // এক IP থেকে max 100 request
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+app.use(limiter);
 
   // CORS
 const allowedOrigins = process.env.FRONTEND_URLS.split(','); // Array বানালো
