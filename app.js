@@ -4,7 +4,7 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import helmet from 'helmet';
 import compression from 'compression';
-// import rateLimit from 'express-rate-limit';
+import rateLimit from 'express-rate-limit';
 import cluster from 'cluster';
 import os from 'os';
 import connectDB from './utils/db.js';
