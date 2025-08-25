@@ -101,20 +101,15 @@ const storage = multerS3({
     }
 });
 
-// ✅ Multer instance (100MB পর্যন্ত allow)
-const upload = multer({ 
-    storage,
-    limits: { fileSize: 100 * 1024 * 1024 } // 100MB পর্যন্ত
-});
+// ✅ Multer instance for both cover & pdf
+const upload = multer({ storage });
 
-// ✅ Upload endpoint
-router.post(
-    '/upload',
+// Upload endpoint
+router.post('/upload',
     upload.fields([
         { name: 'cover', maxCount: 1 },
         { name: 'file', maxCount: 1 }
     ]),
-    isAuthenticated,
     uploadBook
 );
 

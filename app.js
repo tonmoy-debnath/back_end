@@ -39,7 +39,8 @@ if (cluster.isPrimary) {
   });
 } else {
   // Middleware
-  app.use(express.json({ limit: '10mb' }));
+  app.use(express.json({ limit: '600mb' }));
+  app.use(express.urlencoded({ limit: '600mb', extended: true }));
   app.use(cookieParser());
   app.use(helmet());
   app.use(compression());
