@@ -26,6 +26,7 @@ import adminmcqResult from "./adminpanal/routes/adminmcqResult.routes.js";
 import adminmcq from "./adminpanal/routes/adminmcq.routes.js";
 import admincqdashbord from "./adminpanal/routes/admincqdashbord.routes.js";
 import adminAnswerRoutes from "./adminpanal/routes/adminAnswerRoutes.js";
+import adminaidashbord from "./adminpanal/routes/adminai.route.js";
 
 dotenv.config();
 const app = express();
@@ -89,6 +90,7 @@ if (cluster.isPrimary) {
   app.use("/api/adminmcq", adminmcq);
   app.use("/api/admincqdashbord", admincqdashbord);
   app.use("/api/adminanswers", adminAnswerRoutes);
+  app.use("/api/adminaidashbord", adminaidashbord);
 
   // Global Error Handler
   app.use((err, req, res, next) => {
