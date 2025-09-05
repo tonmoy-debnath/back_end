@@ -16,7 +16,7 @@ router.put("/update", isAuthenticated, upload.single("profile_picture"), updateP
 
 router.get("/allasked",isAuthenticated, getAllAskedByUser);
 
-router.get("/feed",  getUserFeedAnswers);
+router.get("/feed",isAuthenticated,  getUserFeedAnswers);
 
 
 export default router;
