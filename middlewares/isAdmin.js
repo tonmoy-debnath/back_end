@@ -2,16 +2,16 @@
 import Admin from "../model/Admin.model.js";
 
 const isAdmin = async (req, res, next) => {
-  const userId = req.id; // JWT বা session থেকে set করা user ID
-
+  // Multer দিয়ে handle করার পরে multipart/form-data এর সব field req.body তেই থাকবে
+  const userId = req.id;
   if (!userId) {
     return res
       .status(400)
-      .json({ message: "User ID missing in request." });
+      .json({ message: "User ID missing in request body." });
   }
 
   try {
-    // Admin collection-এ user ID আছে কিনা চেক
+    // শুধু Admin collection-এ ওই userId আছে কি না চেক কর
     const exists = await Admin.exists({ user: userId });
     if (!exists) {
       return res
@@ -19,7 +19,7 @@ const isAdmin = async (req, res, next) => {
         .json({ message: "Unauthorized: You are not an admin." });
     }
 
-    // থাকলে পরবর্তী middleware বা controller এ যাও
+    // যদি থাকে, তাহলে পরবর্তী হ্যান্ডলারে যাও
     next();
   } catch (error) {
     console.error("isAdmin middleware error:", error);

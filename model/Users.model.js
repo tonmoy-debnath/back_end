@@ -20,6 +20,8 @@ const userSchema = new mongoose.Schema({
   bookmarks: [{ type: mongoose.Schema.Types.ObjectId, ref: "Question" }],
   book_list: [{ type: mongoose.Schema.Types.ObjectId, ref: "Book" }],
   exams: [{ type: mongoose.Schema.Types.ObjectId, ref: "Exam" }],
+  referralCode: { type: String, unique: true, index: true },
+  referralingCode: { type: String, unique: true, index: true },
   created_at: { type: Date, default: Date.now },
   updated_at: { type: Date, default: Date.now },
 });

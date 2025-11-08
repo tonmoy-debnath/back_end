@@ -13,7 +13,7 @@ import {
 
 const router = express.Router();
 
-router.post("/create", upload.single("stimulusImage"), isAuthenticated,isAdmin , createCreativeQuestion);
+router.post("/create", upload.single("stimulusImage"), isAuthenticated, createCreativeQuestion);
 router.get("/getCreativeQuestions",isAuthenticated, getCreativeQuestions);
 router.post("/select" , isAuthenticated, selectQuestion);
 router.post("/deselect",isAuthenticated, deselectQuestion);

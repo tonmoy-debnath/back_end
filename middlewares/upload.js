@@ -1,5 +1,74 @@
 // // middlewares/upload.js
 // import multer from "multer";
+// import path from "path";
+// import fs from "fs";
+// import crypto from 'crypto';
+
+// // গন্তব্য ফোল্ডার তৈরি থাকলে ঠিক আছে, না থাকলে বানাবে
+// const uploadDir = "./upload/pic/profile";
+// if (!fs.existsSync(uploadDir)) {
+//   fs.mkdirSync(uploadDir, { recursive: true });
+// }
+
+// const storage = multer.diskStorage({
+//   destination: function (req, file, cb) {
+//     cb(null, uploadDir);
+//   },
+
+//   filename: function (req, file, cb) {
+//   const ext = path.extname(file.originalname);
+//   const uniqueSuffix = crypto.randomBytes(6).toString('hex'); // 12 characters
+//   const uniqueName = `user-${Date.now()}-${uniqueSuffix}${ext}`;
+//   cb(null, uniqueName);
+// }
+// });
+
+// const upload = multer({ storage });
+
+// export default upload;
+
+
+
+// import multer from "multer";
+// import crypto from "crypto";
+// import path from "path";
+// import { S3Client } from "@aws-sdk/client-s3";
+// import multerS3 from "multer-s3";
+
+// // S3 ক্লায়েন্ট সেটআপ
+// const s3 = new S3Client({
+//   region: process.env.AWS_REGION, // env থেকে region নিচ্ছে
+//   credentials: {
+//     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+//     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+//   },
+// });
+
+// // S3 storage configuration
+// const storage = multerS3({
+//   s3: s3,
+//   bucket: process.env.S3_BUCKET_NAME, // env থেকে bucket নাম নিচ্ছে
+//   contentType: multerS3.AUTO_CONTENT_TYPE,
+//   metadata: (req, file, cb) => {
+//     cb(null, { fieldName: file.fieldname });
+//   },
+//   key: (req, file, cb) => {
+//     const ext = path.extname(file.originalname);
+//     const uniqueSuffix = crypto.randomBytes(6).toString("hex");
+//     const uniqueName = `upload/pic/profile/user-${Date.now()}-${uniqueSuffix}${ext}`;
+//     cb(null, uniqueName);
+//   },
+// });
+
+// const upload = multer({ storage });
+
+// export default upload;
+
+
+
+
+// // middlewares/upload.js
+// import multer from "multer";
 // import crypto from "crypto";
 // import path from "path";
 // import { S3Client } from "@aws-sdk/client-s3";
@@ -14,7 +83,7 @@
 // });
 
 // const storage = multerS3({
-//   s3,
+//   s3: s3,
 //   bucket: process.env.S3_BUCKET_NAME,
 //   contentType: multerS3.AUTO_CONTENT_TYPE,
 //   metadata: (req, file, cb) => {
@@ -23,43 +92,21 @@
 //   key: (req, file, cb) => {
 //     const ext = path.extname(file.originalname);
 //     const uniqueSuffix = crypto.randomBytes(6).toString("hex");
-//     const filename = `upload/pic/profile/user-${Date.now()}-${uniqueSuffix}${ext}`;
-//     cb(null, filename);
+//     const uniqueName = `upload/pic/profile/user-${Date.now()}-${uniqueSuffix}${ext}`;
+//     cb(null, uniqueName);
 //   },
 // });
 
-// const baseUpload = multer({ storage, limits: { fileSize: 5 * 1024 * 1024 } }); // 5MB limit
+// const baseUpload = multer({ storage });
 
-// // Wrapper for single file
-// function single(fieldName) {
+// function wrapSingle(fieldName) {
 //   const mw = baseUpload.single(fieldName);
 //   return (req, res, next) => {
 //     mw(req, res, (err) => {
 //       if (err) return next(err);
-//       if (req.file) {
-//         // Attach S3 URL and original filename
-//         req.file.url = req.file.location; // S3 public URL
-//         req.file.filename = req.file.key; // S3 key
-//         req.file.sizeKB = Math.round(req.file.size / 1024); // Optional: size in KB
-//       }
-//       next();
-//     });
-//   };
-// }
-
-// // Wrapper for multiple files
-// function array(fieldName, maxCount = 10) {
-//   const mw = baseUpload.array(fieldName, maxCount);
-//   return (req, res, next) => {
-//     mw(req, res, (err) => {
-//       if (err) return next(err);
-//       if (req.files) {
-//         req.files = req.files.map(file => ({
-//           ...file,
-//           url: file.location,
-//           filename: file.key,
-//           sizeKB: Math.round(file.size / 1024)
-//         }));
+//       if (req.file && req.file.location) {
+//         req.file.path = req.file.location; // এখন path = S3 URL
+//         req.file.filename = req.file.key;  // চাইলে filename ও সেট করে দিলাম
 //       }
 //       next();
 //     });
@@ -67,17 +114,19 @@
 // }
 
 // const upload = {
-//   single,
-//   array,
+//   single: wrapSingle,
+//   array: baseUpload.array.bind(baseUpload),
 //   fields: baseUpload.fields.bind(baseUpload),
-//   any: baseUpload.any.bind(baseUpload),
 //   none: baseUpload.none.bind(baseUpload),
+//   any: baseUpload.any.bind(baseUpload),
 // };
 
 // export default upload;
 
 
 
+
+// middlewares/upload.js
 import multer from "multer";
 import crypto from "crypto";
 import path from "path";

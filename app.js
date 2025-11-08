@@ -18,6 +18,7 @@ import mcqExam from './routes/msq.exam.routes.js';
 import aiAnswer from "./routes/aiask.Route.js";
 import creativeQuestionRoutes from "./routes/creativeQuestionRoutes.js";
 import bookRoutes from './routes/books.routes.js';
+import subscriptionRequestRoutes from "./routes/subscriptionRequestRoutes.js";
 import adminRoutes from "./adminpanal/routes/superadmin.Routes.js";
 import adminanswer from './adminpanal/routes/answer.js';
 import adminUserRoutes from "./adminpanal/routes/adminUserRoutes.js";
@@ -27,6 +28,7 @@ import adminmcq from "./adminpanal/routes/adminmcq.routes.js";
 import admincqdashbord from "./adminpanal/routes/admincqdashbord.routes.js";
 import adminAnswerRoutes from "./adminpanal/routes/adminAnswerRoutes.js";
 import adminaidashbord from "./adminpanal/routes/adminai.route.js";
+import noticeRoutes from "./routes/noticeRoutes.js";
 
 dotenv.config();
 const app = express();
@@ -82,6 +84,8 @@ if (cluster.isPrimary) {
   app.use("/api/aiAnswer", aiAnswer);
   app.use("/api/creative", creativeQuestionRoutes);
   app.use("/api/books", bookRoutes);
+  app.use("/api/subscriptionRequest", subscriptionRequestRoutes);
+  app.use("/api/notices", noticeRoutes);
   app.use("/api/admin", adminRoutes);
   app.use("/api/adminanswer", adminanswer);
   app.use("/api/adminusers", adminUserRoutes);

@@ -4,6 +4,7 @@ const selectedQuestionSchema = new mongoose.Schema({
   userId: {
     type: String,
     required: true,
+    
     unique: true, // এক ইউজারের জন্য একটা রেকর্ড
   },
   questionIds: [

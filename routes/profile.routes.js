@@ -1,7 +1,8 @@
 import express from "express";
 import isAuthenticated from "../middlewares/Authenticated.js";
 import upload  from "../middlewares/upload.js";
-import { getMyProfile , updateProfile ,getAllAskedByUser , getUserFeedAnswers } from "../controllers/profile.controller.js";
+import { getMyProfile , updateProfile ,getAllAskedByUser , getUserFeedAnswers ,useReferralCode } from "../controllers/profile.controller.js";
+import  {checkSubscription}  from "../middlewares/subscription.js"
 
 const router = express.Router();
 
@@ -16,7 +17,8 @@ router.put("/update", isAuthenticated, upload.single("profile_picture"), updateP
 
 router.get("/allasked",isAuthenticated, getAllAskedByUser);
 
-router.get("/feed",isAuthenticated,  getUserFeedAnswers);
+router.get("/feed", isAuthenticated,  getUserFeedAnswers);
 
+router.post("/usereferral",isAuthenticated , useReferralCode);
 
 export default router;
