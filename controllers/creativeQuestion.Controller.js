@@ -4,9 +4,11 @@ import SelectedQuestion from "../model/SelectedQuestion.model.js";
 
 export const createCreativeQuestion = async (req, res) => {
   try {
+    const author = req.id;
     const { class: cls, subject, chapter, stimulusText, questions, answers } = req.body;
 
     const newQuestion = new CreativeQuestion({
+      author,
       class: cls,
       subject,
       chapter,

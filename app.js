@@ -29,6 +29,9 @@ import admincqdashbord from "./adminpanal/routes/admincqdashbord.routes.js";
 import adminAnswerRoutes from "./adminpanal/routes/adminAnswerRoutes.js";
 import adminaidashbord from "./adminpanal/routes/adminai.route.js";
 import noticeRoutes from "./routes/noticeRoutes.js";
+import jobexam from "./routes/job.Route.js";
+import versitytest from "./routes/Versitytest.rouat.js";
+import resultRoutes from "./routes/result.route.js";
 
 dotenv.config();
 const app = express();
@@ -86,6 +89,9 @@ if (cluster.isPrimary) {
   app.use("/api/books", bookRoutes);
   app.use("/api/subscriptionRequest", subscriptionRequestRoutes);
   app.use("/api/notices", noticeRoutes);
+  app.use("/api/jobexam", jobexam);
+  app.use("/api/versitytest", versitytest);
+  app.use("/api/results", resultRoutes);
   app.use("/api/admin", adminRoutes);
   app.use("/api/adminanswer", adminanswer);
   app.use("/api/adminusers", adminUserRoutes);
