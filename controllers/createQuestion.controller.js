@@ -119,27 +119,58 @@ export const generatePDF = async (req, res) => {
       }
 
       // ছবি লোড
-      if (q.stimulusImage) {
-        const imageUrl = `${q.stimulusImage}`;
-        try {
-          const response = await fetch(imageUrl);
-          if (!response.ok)
-            throw new Error(`Image fetch failed: ${response.statusText}`);
-          const imageBuffer = Buffer.from(await response.arrayBuffer());
-          const availableWidth =
-            doc.page.width - doc.page.margins.left - doc.page.margins.right;
-          const maxHeight = doc.currentLineHeight() * 5;
+      // if (q.stimulusImage) {
+      //   const imageUrl = `${q.stimulusImage}`;
+      //   try {
+      //     const response = await fetch(imageUrl);
+      //     if (!response.ok)
+      //       throw new Error(`Image fetch failed: ${response.statusText}`);
+      //     const imageBuffer = Buffer.from(await response.arrayBuffer());
+      //     const availableWidth =
+      //       doc.page.width - doc.page.margins.left - doc.page.margins.right;
+      //     const maxHeight = doc.currentLineHeight() * 5;
 
-          doc.image(imageBuffer, {
-            fit: [availableWidth, maxHeight],
-            align: "center",
-            valign: "top",
-          });
-          doc.moveDown(0.5);
+      //     doc.image(imageBuffer, {
+      //       fit: [availableWidth, maxHeight],
+      //       align: "center",
+      //       valign: "top",
+      //     });
+      //     doc.moveDown(0.5);
+      //   } catch (e) {
+      //     console.error("⚠️ ছবি লোড করতে সমস্যা:", e);
+      //   }
+      // }
+
+      if (q.stimulusImage) {
+        try {
+          const imagePath = path.join(
+            __dirname,
+            "..",
+            q.stimulusImage
+          );
+
+          if (fs.existsSync(imagePath)) {
+            const imageBuffer = fs.readFileSync(imagePath);
+
+            const availableWidth =
+              doc.page.width - doc.page.margins.left - doc.page.margins.right;
+            const maxHeight = doc.currentLineHeight() * 5;
+
+            doc.image(imageBuffer, {
+              fit: [availableWidth, maxHeight],
+              align: "center",
+              valign: "top",
+            });
+
+            doc.moveDown(0.5);
+          } else {
+            console.log("⚠️ Image file not found:", imagePath);
+          }
         } catch (e) {
           console.error("⚠️ ছবি লোড করতে সমস্যা:", e);
         }
       }
+
 
       // Sub-questions
       const labels = ["ক", "খ", "গ", "ঘ"];
