@@ -3,7 +3,7 @@ module.exports = {
   apps: [
     {
       name: "foxeka-api",
-      script: "./server.js",           // আপনার এন্ট্রি ফাইল
+      script: "./app.js",           // আপনার এন্ট্রি ফাইল
       exec_mode: "cluster",
       instances: "max",                // সব CPU কোর ব্যবহার
       watch: false,
@@ -20,7 +20,7 @@ module.exports = {
         NODE_ENV: "production",
         PORT: "3000",
         HOST: "0.0.0.0",
-        // FRONTEND_URLS: "https://www.yourdomain.com,https://admin.yourdomain.com",
+        FRONTEND_URLS: "https://foxeka.com",
       },
       // লগ ফাইল
       output: "./logs/out.log",
